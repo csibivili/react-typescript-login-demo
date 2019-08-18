@@ -1,4 +1,5 @@
 import * as React from 'react';
+import AuthService from '../../services/authService';
 
 export interface ILoginProps {
 }
@@ -12,12 +13,16 @@ export interface ILoginState {
 
 export default class Login extends React.Component<ILoginProps, ILoginState> {
 
+  authService: AuthService;
+
   constructor(props: ILoginProps) {
     super(props);
     this.state = {
       username: '',
       password: ''
     }
+
+    this.authService = new AuthService();
   }
 
   handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,8 +31,9 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
     this.setState(newState);
   }
 
-  login = (event: React.FormEvent<HTMLFormElement>) => {
+  login = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const token = await this.authService.login(this.state.username, this.state.password);
   }
 
   public render() {
