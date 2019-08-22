@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Redirect } from 'react-router-dom';
+import { UserContext } from '../../userContext';
 
 export interface IHomeProps {
 }
@@ -30,9 +31,14 @@ export default class Home extends React.Component<IHomeProps, IHomeState> {
     }
 
     return (
-      <div>
-        <button className="btn btn-secondary" onClick={this.logout}>Logout</button>
-      </div>
+      <UserContext.Consumer>
+        {(context) => (
+          <div>
+            <button className="btn btn-secondary" onClick={this.logout}>Logout</button>
+            <h1>{context.user}</h1>
+          </div>
+        )}
+      </UserContext.Consumer>
     );
   }
 }

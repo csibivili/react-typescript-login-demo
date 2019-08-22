@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import AuthService from '../../services/authService';
 
 export interface ILoginProps {
+  updateUser(user: string): any;
 }
 
 export interface ILoginState {
@@ -38,6 +39,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
     event.preventDefault();
     const token = await this.authService.login(this.state.username, this.state.password);
     if (token) {
+      this.props.updateUser(this.state.username);
       let newState = { ...this.state };
       newState.isLoggedIn = true;
       this.setState(newState);
@@ -45,7 +47,7 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
   }
 
   public render() {
-    const {isLoggedIn} = this.state;
+    const { isLoggedIn } = this.state;
 
     if (isLoggedIn) {
       return <Redirect to='/home' />
@@ -57,12 +59,12 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
           <form className="col-lg-3 col-sm-4 col-8 mx-auto" onSubmit={this.login}>
             <div className="form-group">
               <label className="w-100">Username
-                  <input type="text" className="form-control" name="username" onChange={this.handleChange}/>
+                  <input type="text" className="form-control" name="username" onChange={this.handleChange} />
               </label>
             </div>
             <div className="form-group">
               <label className="w-100">Password
-                  <input type="password" className="form-control" name="password" onChange={this.handleChange}/>
+                  <input type="password" className="form-control" name="password" onChange={this.handleChange} />
               </label>
             </div>
             <button type="submit" className="btn btn-primary">Sign in</button>
