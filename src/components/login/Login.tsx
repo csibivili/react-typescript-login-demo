@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Redirect } from 'react-router-dom';
 import AuthService from '../../services/authService';
 
 export interface ILoginProps {
@@ -7,6 +8,7 @@ export interface ILoginProps {
 export interface ILoginState {
   username: string;
   password: string;
+  isLoggedIn: boolean;
 
   [key: string]: ILoginState[keyof ILoginState];
 }
@@ -19,7 +21,8 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
     super(props);
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      isLoggedIn: false
     }
 
     this.authService = new AuthService();
@@ -34,9 +37,20 @@ export default class Login extends React.Component<ILoginProps, ILoginState> {
   login = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const token = await this.authService.login(this.state.username, this.state.password);
+    if (token) {
+      let newState = { ...this.state };
+      newState.isLoggedIn = true;
+      this.setState(newState);
+    }
   }
 
   public render() {
+    const {isLoggedIn} = this.state;
+
+    if (isLoggedIn) {
+      return <Redirect to='/home' />
+    }
+
     return (
       <div className="container min-vh-100">
         <div className="row min-vh-100 justify-content-center align-items-center">
